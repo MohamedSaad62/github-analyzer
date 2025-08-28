@@ -1,4 +1,4 @@
--Application link :https://github-analyzer-henna.vercel.app/
--The application view and analyze github profile using AI by integrating with gemini llm 
--The application is written with help of chatgpt
--The application has /api/notes endpoint but removed because it faced issues in production and i was running out of time
+-Application link :https://github-analyzer-henna.vercel.app/<br>
+-The application view and analyze github profile using AI by integrating with gemini llm <br>
+-The application is written with help of chatgpt<br>
+-The application has /api/notes endpoint but removed because it faced issues in production and i was running out of time<br>
