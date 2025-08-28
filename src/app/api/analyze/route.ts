@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN as string;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY as string;
+
 
 
 export async function POST(req: NextRequest) {
