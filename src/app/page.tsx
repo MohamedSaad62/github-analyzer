@@ -129,7 +129,7 @@ export default function Home() {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username.trim() }),
+        body: JSON.stringify({ username: username.trim(), repos }),
       });
 
       const data = await res.json();
@@ -145,39 +145,78 @@ export default function Home() {
   };
 
   // 🔹 Compare
-  const compareUsers = async () => {
-    if (!username.trim() || !compareUsername.trim()) {
-      setError("Please enter both usernames");
+const compareUsers = async () => {
+  if (!username.trim() || !compareUsername.trim()) {
+    setError("Please enter both usernames");
+    return;
+  }
+
+  setComparing(true);
+  setError("");
+  setAnalysis("");
+  setCompareAnalysis("");
+
+  try {
+    // 🔹 Step 1: Fetch user + repos for both usernames
+    const [user1Res, user2Res] = await Promise.all([
+      fetch("/api/github", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username.trim() }),
+      }),
+      fetch("/api/github", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: compareUsername.trim() }),
+      }),
+    ]);
+
+    const user1Data = await user1Res.json();
+    const user2Data = await user2Res.json();
+
+    if (!user1Res.ok || !user2Res.ok) {
+      setError(user1Data.error || user2Data.error || "Failed to fetch user data");
+      setComparing(false);
       return;
     }
 
-    setComparing(true);
-    setError("");
-    setAnalysis("");
-    setCompareAnalysis("");
-
-    try {
-      const res = await fetch("/api/analyze", {
+    // 🔹 Step 2: Analyze both users one by one (separate requests)
+    const [analyze1Res, analyze2Res] = await Promise.all([
+      fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username1: username.trim(),
-          username2: compareUsername.trim(),
+          username: username.trim(),
+          repos: user1Data.repos,
         }),
-      });
+      }),
+      fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: compareUsername.trim(),
+          repos: user2Data.repos,
+        }),
+      }),
+    ]);
 
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Comparison failed");
-      } else {
-        setAnalysis(data.summary1 || "No summary available");
-        setCompareAnalysis(data.summary2 || "No summary available");
-      }
-    } catch (err) {
-      setError("Failed to compare");
+    const analyze1Data = await analyze1Res.json();
+    const analyze2Data = await analyze2Res.json();
+
+    if (!analyze1Res.ok || !analyze2Res.ok) {
+      setError(analyze1Data.error || analyze2Data.error || "Comparison failed");
+    } else {
+      setAnalysis(analyze1Data.summary || "No summary available");
+      setCompareAnalysis(analyze2Data.summary || "No summary available");
     }
-    setComparing(false);
-  };
+  } catch (err) {
+    console.error("Comparison error:", err);
+    setError("Failed to compare users");
+  }
+
+  setComparing(false);
+};
+
 
   return (
     <div style={{ maxWidth: 800, margin: "auto", padding: 20, fontFamily: "Arial" }}>
