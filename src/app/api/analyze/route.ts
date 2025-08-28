@@ -74,8 +74,7 @@ ${commitSummary}
 README excerpts:
 ${readmeSummaries}
 
- summarize and analysis where:
- 0. be formal you are integrated with an app
+ summarize and analysis where you do the following points:
  1. output after every point should exist end line
  2. number of repositories in a single point
  3. programming Languages used in another single point 
