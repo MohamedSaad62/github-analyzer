@@ -114,35 +114,58 @@ export default function Home() {
   };
 
   // 🔹 Analyze
-  const analyzeActivity = async () => {
-    if (!username.trim()) {
-      setError("Please enter a username");
+ const analyzeActivity = async () => {
+  if (!username.trim()) {
+    setError("Please enter a username");
+    return;
+  }
+
+  setAnalyzing(true);
+  setError("");
+  setAnalysis("");
+  setCompareAnalysis("");
+
+  try {
+    // 🔹 Step 1: Fetch GitHub user data + repos
+    const userRes = await fetch("/api/github", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username.trim() }),
+    });
+
+    const userData = await userRes.json();
+
+    if (!userRes.ok) {
+      setError(userData.error || "Failed to fetch user data");
+      setAnalyzing(false);
       return;
     }
 
-    setAnalyzing(true);
-    setError("");
-    setAnalysis("");
-    setCompareAnalysis("");
+    // 🔹 Step 2: Analyze using that data
+    const analyzeRes = await fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: username.trim(),
+        repos: userData.repos,
+      }),
+    });
 
-    try {
-      const res = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username.trim(), repos }),
-      });
+    const analysisData = await analyzeRes.json();
 
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Failed to analyze");
-      } else {
-        setAnalysis(data.summary || "No analysis available");
-      }
-    } catch (err) {
-      setError("Failed to analyze");
+    if (!analyzeRes.ok) {
+      setError(analysisData.error || "Failed to analyze user");
+    } else {
+      setAnalysis(analysisData.summary || "No analysis available");
     }
-    setAnalyzing(false);
-  };
+  } catch (err) {
+    console.error("Analyze error:", err);
+    setError("Unexpected error during analysis");
+  }
+
+  setAnalyzing(false);
+};
+
 
   // 🔹 Compare
 const compareUsers = async () => {
