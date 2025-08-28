@@ -29,9 +29,6 @@ export async function POST(req: NextRequest) {
     const user = await userRes.json();
     let repos = await reposRes.json();
 
-    // limit repos to 5 to avoid API overload
-    repos = repos.slice(0, 5);
-
     // fetch README for each repo
     const reposWithReadme = await Promise.all(
       repos.map(async (repo: any) => {
