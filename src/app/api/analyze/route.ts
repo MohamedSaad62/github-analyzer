@@ -74,7 +74,13 @@ ${commitSummary}
 README excerpts:
 ${readmeSummaries}
 
-Please summarize in points as described earlier.
+ summarize and analysis where:
+ 1. output after every point should exist end line
+ 2. number of repositories in a single point
+ 3. programming Languages used in another single point 
+ 4. frequncy of commits and how much use is active in another single point
+ 5.show trends in another single point in no more than 100 words
+ 6. make general analysis and summary in more than 200 words
 `;
 
     // --- Gemini API call with safe checks ---
