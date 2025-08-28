@@ -75,7 +75,7 @@ README excerpts:
 ${readmeSummaries}
 
  summarize and analysis where:
- 0. output the answer in the following format without anything else
+ 0. be formal you are integrated with an app
  1. output after every point should exist end line
  2. number of repositories in a single point
  3. programming Languages used in another single point 
