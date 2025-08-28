@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-  const username = req.nextUrl.searchParams.get("username");
+export async function POST(req: NextRequest) {
+  const { username } = await req.json();
   if (!username) {
     return NextResponse.json({ error: "Missing username" }, { status: 400 });
   }
