@@ -75,13 +75,13 @@ README excerpts:
 ${readmeSummaries}
 
  summarize and analysis where:
+ 0. output the answer in the following format without anything else
  1. output after every point should exist end line
  2. number of repositories in a single point
  3. programming Languages used in another single point 
  4. frequncy of commits and how much use is active in another single point
  5.show trends in another single point in no more than 100 words
  6. make general analysis and summary in more than 200 words
- 7.output the points without anything else 
 `;
 
     // --- Gemini API call with safe checks ---
