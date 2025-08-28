@@ -81,6 +81,7 @@ ${readmeSummaries}
  4. frequncy of commits and how much use is active in another single point
  5.show trends in another single point in no more than 100 words
  6. make general analysis and summary in more than 200 words
+ 7.output the points without anything else 
 `;
 
     // --- Gemini API call with safe checks ---
